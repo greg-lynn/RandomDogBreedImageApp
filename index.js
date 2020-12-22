@@ -17,9 +17,19 @@ function displayResults(responseJson, breed) {
 
 function getDogImage(breed) {
   fetch(`https://dog.ceo/api/breed/${breed}/images/random`)
-    .then(response => response.json())
-    .then(responseJson => displayResults(responseJson, breed))
-    .catch(error => alert('Something went wrong. Try again later.'));
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(responseJson => displayResults(responseJson))
+    .catch(err => {
+      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+    });
+    //.then(response => response.json())
+    //.then(responseJson => displayResults(responseJson, breed))
+    //.catch(error => alert(`Something went wrong: ${err.message}`));
 }
 
 function watchForm() {
